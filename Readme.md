@@ -19,7 +19,7 @@ so for now it is recommended to build servo on a Linux machine and copy the shar
 `entry/libs/arm64-v8a/` directory in this project.
 
 ```
-cp /path/to/servo/target/aarch64-unknown-linux-ohos/<profile>/libsimpleservo.so entry/libs/arm64-v8a/libsimpleservo.so
+cp /path/to/servo/target/aarch64-unknown-linux-ohos/<profile>/libservoshell.so entry/libs/arm64-v8a/libservoshell.so
 ```
 
 Hint: If you built servo with the `--release` flag, `<profile>` should be replaced with `release`, otherwise use `debug`.

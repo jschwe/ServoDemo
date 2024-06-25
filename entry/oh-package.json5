@@ -2,11 +2,11 @@
   "license": "",
   "devDependencies": {},
   "author": "",
-  "name": "entry",
+  "name": "servoshell",
   "description": "Please describe the basic information.",
   "main": "",
   "version": "1.0.0",
   "dependencies": {
-    "libsimpleservo.so": "file:./src/main/cpp/types/libentry"
+    "libservoshell.so": "file:./src/main/cpp/types/libentry"
   }
 }

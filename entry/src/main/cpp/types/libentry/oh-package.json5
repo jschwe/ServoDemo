@@ -1,5 +1,5 @@
 {
-  "name": "libsimpleservo.so",
+  "name": "libservoshell.so",
   "types": "./index.d.ts",
   "version": "",
   "description": "Please describe the basic information."

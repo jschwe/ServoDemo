@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "entry",
+    "name": "servoshell",
     "type": "entry",
     "description": "$string:module_desc",
     "mainElement": "EntryAbility",
