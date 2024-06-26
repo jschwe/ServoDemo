@@ -38,32 +38,40 @@ function get_device_type(): string {
 @Entry
 @Component
 struct Index {
-  xComponentContext: object | undefined = undefined;
+  xComponentContext: ServoXComponentInterface | undefined = undefined;
   xComponentAttrs: XComponentAttrs = {
     id: 'ServoDemo',
     type: XComponentType.SURFACE,
-    libraryname: 'simpleservo'
+    libraryname: 'servoshell',
   }
-  urlToLoad: string = 'https://servo.org'
+  @State urlToLoad: string =  'https://servo.org'
+
   build() {
     Column() {
-      TextInput({placeholder:'URL',text: this.urlToLoad})
+      TextInput({placeholder:'URL',text: $$this.urlToLoad})
       .type(InputType.Normal)
         .onChange((value) => {
           this.urlToLoad = value
         })
         .onSubmit((EnterKeyType)=>{
-          simpleservo.loadURL(this.urlToLoad)
+          this.xComponentContext?.loadURL(this.urlToLoad)
           console.info('Load URL: ', this.urlToLoad)
         })
       XComponent(this.xComponentAttrs)
         .focusable(true)
         .onLoad((xComponentContext) => {
-          this.xComponentContext = xComponentContext;
-          console.info('ServoDemo XCOMPONENT onLoad enter');
-        })
-        .onDestroy(() => {
-          console.info('ServoDemo XCOMPONENT onDestroy');
+          this.xComponentContext = xComponentContext as ServoXComponentInterface;
+          let init_options: InitOpts = {
+            url: this.urlToLoad,
+            deviceType: get_device_type(),
+            osFullName: deviceInfo.osFullName,
+            displayDensity: get_density()
+          }
+          this.xComponentContext.initServo(init_options)
+          this.xComponentContext.registerURLcallback((new_url) => {
+            console.info('New URL from native: ', new_url)
+            this.urlToLoad = new_url
+          })
         })
     }
     .width('100%')
