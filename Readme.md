@@ -91,7 +91,7 @@ For your convenience I would also recommend to add the necessary tools to your P
 
 ```
 # hvigorw is the build tool wrapper
-export PATH=/path/to/command-line-tools/hvigor/bin/hvigorw:$PATH
+export PATH=/path/to/command-line-tools/hvigor/bin:$PATH
 # Add `hdc` to path (like adb for android)
 export PATH=/path/to/command-line-tools/sdk/HarmonyOS-NEXT-DB1/openharmony/toolchains/:$PATH
 ```
@@ -119,7 +119,7 @@ hdc shell aa force-stop com.servo.demo
 hdc uninstall com.servo.demo
 # Create a temporary directory on the device and send the .hap file to the device
 hdc shell mkdir data/local/tmp/servoshell-tmp
-hdc file send entry/build/default/outputs/default/servoshell-default-signed.hap "data/local/tmp/servoshell-tmp"
+hdc file send entry/build/default/outputs/default/servoshell-default-signed.hap "/data/local/tmp/servoshell-tmp"
 # Install the app
 hdc shell bm install -p data/local/tmp/servoshell-tmp
 # Clean-up the temporary folder
