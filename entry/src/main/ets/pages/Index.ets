@@ -3,6 +3,8 @@ import deviceInfo from '@ohos.deviceInfo';
 
 interface ServoXComponentInterface {
   loadURL(url: string): void;
+  goBack(): void;
+  goForward(): void;
   registerURLcallback(callback: (url: string) => void): void;
   initServo(options: InitOpts): void;
 }
@@ -48,15 +50,29 @@ struct Index {
 
   build() {
     Column() {
-      TextInput({placeholder:'URL',text: $$this.urlToLoad})
-      .type(InputType.Normal)
-        .onChange((value) => {
-          this.urlToLoad = value
-        })
-        .onSubmit((EnterKeyType)=>{
-          this.xComponentContext?.loadURL(this.urlToLoad)
-          console.info('Load URL: ', this.urlToLoad)
-        })
+      Row() {
+        Button('⇦').backgroundColor(Color.White)
+          .fontColor(Color.Black)
+          .fontWeight(FontWeight.Bolder)
+          .onClick(()=>{
+            this.xComponentContext?.goBack()
+          })
+        Button('⇨').backgroundColor(Color.White)
+          .fontColor(Color.Black)
+          .fontWeight(FontWeight.Bolder)
+          .onClick(()=> {
+            this.xComponentContext?.goForward()
+          })
+        TextInput({placeholder:'URL',text: $$this.urlToLoad})
+          .type(InputType.Normal)
+          .onChange((value) => {
+            this.urlToLoad = value
+          })
+          .onSubmit((EnterKeyType)=>{
+            this.xComponentContext?.loadURL(this.urlToLoad)
+            console.info('Load URL: ', this.urlToLoad)
+          })
+      }
       XComponent(this.xComponentAttrs)
         .focusable(true)
         .onLoad((xComponentContext) => {
