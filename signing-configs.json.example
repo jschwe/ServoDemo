@@ -1,0 +1,20 @@
+[
+ // An example for the `signing-configs.json` file which allows storing the signing configuration
+ // in a file which is ignored by git, and parsed at runtime by an hvigor plugin.
+ // The file must be valid json, i.e. it may not contain any comments like this one, or trailing commas.
+ // Multiple signing configs are allows (this file contains an array of configs)
+  {
+    "name": "default",
+    // OpenHarmony or HarmonyOS, depending on target.
+    "type": "HarmonyOS",
+    "material": {
+      "certpath": "D:\\Users\\username\\.ohos\\config\\default_ohos-servo_some_hash.cer",
+      "storePassword": "hex-password",
+      "keyAlias": "debugKey",
+      "keyPassword": "hex-password",
+      "profile": "D:\\Users\\username\\.ohos\\config\\default_ohos-servo_some_hash.p7b",
+      "signAlg": "SHA256withECDSA",
+      "storeFile": "D:\\Users\\username\\.ohos\\config\\default_ohos-servo_some_hash.p12"
+    }
+  }
+]
