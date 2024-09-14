@@ -54,17 +54,23 @@ struct Index {
         Button('⇦').backgroundColor(Color.White)
           .fontColor(Color.Black)
           .fontWeight(FontWeight.Bolder)
+          .width('12%')
+          .fontSize(12)
           .onClick(()=>{
             this.xComponentContext?.goBack()
           })
         Button('⇨').backgroundColor(Color.White)
           .fontColor(Color.Black)
           .fontWeight(FontWeight.Bolder)
+          .fontSize(12)
+          .width('12%')
           .onClick(()=> {
             this.xComponentContext?.goForward()
           })
         TextInput({placeholder:'URL',text: $$this.urlToLoad})
           .type(InputType.Normal)
+          .width('76%')
+          .textOverflow(TextOverflow.MARQUEE)
           .onChange((value) => {
             this.urlToLoad = value
           })
