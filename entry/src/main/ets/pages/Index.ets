@@ -1,3 +1,4 @@
+import { common } from '@kit.AbilityKit';
 import display from '@ohos.display';
 import deviceInfo from '@ohos.deviceInfo';
 
@@ -48,6 +49,7 @@ struct Index {
     libraryname: 'servoshell',
   }
   @State urlToLoad: string =  'https://servo.org'
+  private context = getContext(this) as common.UIAbilityContext;
 
   build() {
     Column() {
@@ -84,7 +86,7 @@ struct Index {
         .focusable(true)
         .onLoad((xComponentContext) => {
           this.xComponentContext = xComponentContext as ServoXComponentInterface;
-          let resource_dir: string = this.getUIContext().getHostContext()?.resourceDir || "";
+          let resource_dir: string = this.context.resourceDir;
           console.info("Resources are located at %s", resource_dir);
           let init_options: InitOpts = {
             url: this.urlToLoad,
