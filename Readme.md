@@ -14,6 +14,18 @@ If you are on Windows or MacOS, you can simply open this repository in the [DevE
 take care of generating signing keys etc. If you are on a Linux machine please checkout the section on
 [Compiling and Signing the ServoDemo app for HarmonyOS on Linux machines](#compiling-and-signing-the-servodemo-app-for-harmonyos-on-linux-machines).
 
+### Preferences
+
+Servo can be configured by editing `AppScope/resources/resfile/prefs.json`.
+This allows you to enable or disable different feature.
+For example on HarmonyOS NEXT devices you need to disable the JIT feature, otherwise servo will crash on startup:
+
+```json
+"js.disable_jit": true,
+```
+
+
+
 ### Building `libservoshell.so`
 
 Currently `libservoshell.so` needs to be manually built and copied to the correct location in this project.
