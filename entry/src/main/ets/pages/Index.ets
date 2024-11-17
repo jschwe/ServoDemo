@@ -2,6 +2,8 @@ import { common } from '@kit.AbilityKit';
 import display from '@ohos.display';
 import deviceInfo from '@ohos.deviceInfo';
 import promptAction from '@ohos.promptAction';
+import { BusinessError } from '@kit.BasicServicesKit';
+import { ShowDialogSuccessResponse } from '@kit.ArkUI';
 
 interface ServoXComponentInterface {
   loadURL(url: string): void;
@@ -9,6 +11,8 @@ interface ServoXComponentInterface {
   goForward(): void;
   registerURLcallback(callback: (url: string) => void): void;
   registerPromptToastCallback(callback: (msg: string) => void): void
+  // See signature of `show_dialog()` for the callback signature
+  registerPromptDialogCallback(callback: (msg: string, labels: string[]) => Promise<ShowDialogSuccessResponse>): void
   initServo(options: InitOpts): void;
 }
 
@@ -47,6 +51,46 @@ function prompt_toast(msg: string) {
       message: msg,
       duration: 2000
     });
+}
+
+type DialogButtonResult = number | null;
+
+// todo: AsyncCallback<ShowDialogSuccessResponse>
+function show_dialog(message: string, labels: string[] /*, callback: (err: number | null, pressed_button: number | null) => undefined
+*/
+):  Promise<ShowDialogSuccessResponse> {
+  try {
+    let index = promptAction.showDialog( {
+      title: 'A servoshell dialog',
+      message: message,
+      // Todo: Figure out how to use `map` or similar to create buttons from the labels array
+      buttons: [
+        {
+          text: labels[0],
+          color: '#000000'
+        },
+        {
+          text: labels[1],
+          color: '#000000'
+        }
+      ]
+    } /*, (err, data) => {
+      if (err) {
+        console.info('showDialog err: ' + err);
+        callback(err.code, null)
+      } else {
+        console.info('showDialog success callback, click button: ' + data.index);
+        callback(null, data.index)
+      }
+    } */);
+    return index;
+  // } catch (error) {
+  //   let message = (error as BusinessError).message
+  //   let code = (error as BusinessError).code
+  //   console.error(`showDialog args error code is ${code}, message is ${message}`);
+  //   return Promise.
+  //   // todo: also callback servo on exception
+  }
 }
 
 // Use the getShared API to obtain the LocalStorage instance shared by stage.
@@ -117,6 +161,7 @@ struct Index {
             this.urlToLoad = new_url
           })
           this.xComponentContext.registerPromptToastCallback(prompt_toast)
+          this.xComponentContext.registerPromptDialogCallback(show_dialog)
         })
     }
     .width('100%')
