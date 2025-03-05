@@ -16,12 +16,12 @@ take care of generating signing keys etc. If you are on a Linux machine please c
 
 ### Preferences
 
-Servo can be configured by editing `AppScope/resources/resfile/prefs.json`.
+Servo can be configured by editing `AppScope/resources/resfile/servo/prefs.json`.
 This allows you to enable or disable different feature.
 For example on HarmonyOS NEXT devices you need to disable the JIT feature, otherwise servo will crash on startup:
 
 ```json
-"js.disable_jit": true,
+"js_disable_jit": true,
 ```
 
 
