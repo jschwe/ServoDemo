@@ -17,6 +17,7 @@ interface InitOpts {
   deviceType: string,
   osFullName: string,
   resourceDir: string,
+  cacheDir: string
   displayDensity: number,
   commandlineArgs: string,
 }
@@ -109,6 +110,7 @@ struct Index {
         .onLoad((xComponentContext) => {
           this.xComponentContext = xComponentContext as ServoXComponentInterface;
           let resource_dir: string = this.context.resourceDir;
+          let cache_dir: string = this.context.cacheDir;
           console.debug("Resources are located at %{public}s", resource_dir);
           let init_options: InitOpts = {
             url: this.urlToLoad,
@@ -116,6 +118,7 @@ struct Index {
             osFullName: deviceInfo.osFullName,
             displayDensity: get_density(),
             resourceDir: resource_dir,
+            cacheDir: cache_dir,
             commandlineArgs: this.CommandlineArgs
           }
           this.xComponentContext.initServo(init_options)
