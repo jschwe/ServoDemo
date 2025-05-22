@@ -76,7 +76,7 @@ struct Index {
   }
 
   build() {
-    Column() {
+    Flex({ direction: FlexDirection.Column}) {
       Row() {
         Button('⇦').backgroundColor(Color.White)
           .fontColor(Color.Black)
@@ -131,6 +131,7 @@ struct Index {
         })
     }
     .width('100%')
+    .height('100%')
   }
 }
 
