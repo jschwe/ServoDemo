@@ -9,8 +9,8 @@ interface ServoXComponentInterface {
   goForward(): void;
   registerURLcallback(callback: (url: string) => void): void;
   registerTerminateCallback(callback: () => void): void;
-  registerPromptToastCallback(callback: (msg: string) => void): void
-  focusWebview(index: number) void;
+  registerPromptToastCallback(callback: (msg: string) => void): void;
+  focusWebview(index: number): void;
   initServo(options: InitOpts): void;
 }
 
