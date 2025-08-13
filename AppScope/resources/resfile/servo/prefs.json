@@ -1,5 +1,4 @@
 {
-  "dom_svg_enabled": true,
   "dom_intersection_observer_enabled": true,
   "js_disable_jit": true
 }
