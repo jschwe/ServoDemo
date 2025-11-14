@@ -14,62 +14,55 @@ If you are on Windows or MacOS, you can simply open this repository in the [DevE
 take care of generating signing keys etc. If you are on a Linux machine please checkout the section on
 [Compiling and Signing the ServoDemo app for HarmonyOS on Linux machines](#compiling-and-signing-the-servodemo-app-for-harmonyos-on-linux-machines).
 
+### Quick start
+
+This quick-starts assumes you are a developer and familiar with DevEco Studio.
+1. Download this repository and open it in DevEco Studio.
+2. Download the prebuilt shared library `servo-aarch64-linux-ohos.so` from [servo nightly builds](https://github.com/servo/servo-nightly-builds/releases).
+3. Rename the file to `libservoshell.so` and place it in the folder `entry/libs/arm64-v8a`. Create the folder if it doesn't exist.
+4. Create a signing configuration. 
+5. Use DevEco Studio to deploy the app to your phone / tablet or other device..
+
+<img src="docs/servoshell-location-screenshot.png" alt="file location" width="200"/>
+
 ### Preferences
 
 Servo can be configured by editing `AppScope/resources/resfile/servo/prefs.json`.
-This allows you to enable or disable different feature.
-For example on HarmonyOS NEXT devices you need to disable the JIT feature, otherwise servo will crash on startup:
+This allows you to conveniently edit the default preferences and e.g. enable or disable different features.
+See the `Preferences` struct in [servo's config/prefs.rs](https://github.com/servo/servo/blob/main/components/config/prefs.rs)
+for a list of available options.
+Please note that an invalid `prefs.json` configuration will result in a crash during startup.
 
 ```json
-"js_disable_jit": true,
+{
+  "user_agent": "Custom User-agent"
+}
 ```
 
+### Contributing
+
+If you want to improve the ArkTS / ArkUI page for this Demo browser app, you are free to open pull-requests in this
+repository. However, more complicated changes may require also changing the servo Rust code. See the section below
+on how to contribute to Servo itself.
 
 
 ### Building `libservoshell.so`
 
-Currently `libservoshell.so` needs to be manually built and copied to the correct location in this project.
-You will need to checkout and build the upstream [servo] project
-for OpenHarmony. This currently needs to be done on a Linux or MacOS machine!
+Checkout the [main servo repository](https://github.com/servo/servo) and read the [servo book](https://book.servo.org/title-page.html),
+specifically the sections on [building servo](https://book.servo.org/hacking/building-servo.html) and 
+[building servo for OpenHarmony](https://book.servo.org/hacking/building-for-openharmony.html)
 
-In the ServoDemo root folder run the following command to create the directory for the `libservoshell.so`.
-This Guide assumes that you want to target 64-bit ARM Harmony OS devices.
-
-```
-mkdir -p entry/libs/arm64-v8a/
+Once you have completed the setup you can build servo for HarmonyOS by running
+```shell
+./mach build --ohos --flavor=harmonyos [--release]
 ```
 
-
-In a different directory clone the servo project:
-
-```
-git clone https://github.com/servo/servo
-cd servo
-cp servobuild.example .servobuild
+After building `libservoshell.so`, you can copy it into the `entry/libs/arm64-v8a` directory, e.g.
+```shell
+# Take care to replace <build-profile> with debug, release or which other profile you were building for.
+cp /path/to/servo/target/aarch64-unknown-linux-ohos/<build-profile>/libservoshell.so /path/to/ServoDemo/entry/libs/arm64-v8a/libservoshell.so
 ```
 
-Open the `.servobuild` file in the servo folder, and specify the path to the OpenHarmony SDK `native` directory.
-```
-[ohos]
-ndk = "/path/to/ohos-sdk/<linux|mac>/native"
-```
-Currently OpenHarmony 4.0 or newer is supported.
-
-You can then build servoshell for OpenHarmony by running:
-
-```
-./mach build --target=aarch64-unknown-linux-ohos --release
-```
-
-Building in release mode (by passing --release) is recommended, since the debug version is both slow and large.
-You can find the `libservoshell.so` in the `target` directory of servo, and need to copy it to `/path/to/ServoDemo/entry/libs/arm64-v8a/libservoshell.so.
-Please replace `<profile>` in the command below with `release` or `debug`, depending on the cargo profile you compiled the `so` with. :
-
-```
-cp /path/to/servo/target/aarch64-unknown-linux-ohos/<profile>/libservoshell.so entry/libs/arm64-v8a/libservoshell.so
-```
-
-In the future the build procedure may be automated more.
 
 ## Building the .hap app with DevEco Studio (Windows and Mac only)
 
@@ -87,11 +80,8 @@ the signing keys needed when flashing apps to a Harmony OS device.
 
 ### Setup and dependencies 
 
-Download the [Command Line Tools for HarmonyOS NEXT]. Note that as of Developer Beta 1, this still requires
-logging in with a registered and verified Chinese Huawei ID, registering for the Huawei Developer account 
-and doing the real-name developer account verification.
-If you are not a chinese national, you will still see the download button, but clicking it will have no
-effect.
+Download the [Command Line Tools for HarmonyOS NEXT]. Note that this requires
+logging in with a registered and verified Huawei Developer account.
 
 Extract the command line tools to a directory of your choice, and setup the following environment-variables
 ```
