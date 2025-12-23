@@ -73,8 +73,8 @@ struct Index {
               this.tablist.push(this.tablist[this.tablist.length-1]+1);
             }
             // yes this is correct as we always have one tab extra
-	    // The tab extra is seperate for the initialization and will always exist.
-	    // It is not in the tablist.
+            // The tab extra is seperate for the initialization and will always exist.
+            // It is not in the tablist.
             this.currentIndex = this.tablist.length;
           })
         Button('⇦')
