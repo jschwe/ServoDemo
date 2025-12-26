@@ -1,6 +1,4 @@
 import { common } from '@kit.AbilityKit';
-import display from '@ohos.display';
-import deviceInfo from '@ohos.deviceInfo';
 import promptAction from '@ohos.promptAction';
 
 interface ServoXComponentInterface {
