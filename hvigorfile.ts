@@ -1,23 +1,30 @@
 import { appTasks, OhosAppContext, OhosPluginId } from '@ohos/hvigor-ohos-plugin';
-import { hvigor,getNode } from '@ohos/hvigor'
-import { existsSync, readFileSync } from 'fs';
+import { getNode } from '@ohos/hvigor'
+import * as fs from 'fs';
+import * as path from 'path';
 
-// Extend the configuration from build-profile.json5 by adding the signing configuration,
-// which we read from a file ignored by git, so that users can configure the value locally.
 const rootNode = getNode(__filename);
 rootNode.afterNodeEvaluate(node => {
     const appContext = node.getContext(OhosPluginId.OHOS_APP_PLUGIN) as OhosAppContext;
     const buildProfileOpt = appContext.getBuildProfileOpt();
-
-    const file_name = './signing-configs.json'
-    if(! existsSync(file_name)) {
-        console.log("Could not find file %s in the project directory", file_name)
+    const signingConfigsPath = process.env["SERVO_OHOS_SIGNING_CONFIG"];
+    if (signingConfigsPath) {
+        if (!fs.existsSync(signingConfigsPath)) {
+            console.error("File referenced by SERVO_OHOS_SIGNING_CONFIG does not exist!");
+            return;
+        }
+        const basePath = path.dirname(signingConfigsPath);
+        const signingConfigs = JSON.parse(fs.readFileSync(signingConfigsPath));
+        for (const config of signingConfigs) {
+            config.material.certpath = path.resolve(basePath, config.material.certpath);
+            config.material.profile = path.resolve(basePath, config.material.profile);
+            config.material.storeFile = path.resolve(basePath, config.material.storeFile);
+        }
+        buildProfileOpt['app']['signingConfigs'] = signingConfigs;
     } else {
-        const text = readFileSync(file_name, 'utf-8');
-        const configs = JSON.parse(text)
-        buildProfileOpt['app']['signingConfigs'] = configs;
+        console.log('Signing config not found in enviroment. hvigor will fallback to build-profile.json5.')
     }
-
+    // Set the obj object back to the context object to enable the build process and results.
     appContext.setBuildProfileOpt(buildProfileOpt);
 })
 

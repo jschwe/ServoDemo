@@ -4,8 +4,16 @@
       {
         "name": "default",
         "signingConfig": "default",
-        "compatibleSdkVersion": "5.0.2(14)",
-        "targetSdkVersion": "5.0.2(14)",
+        "compileSdkVersion": 20,
+        "compatibleSdkVersion": 20,
+        "targetSdkVersion": 20,
+        "runtimeOS": "OpenHarmony"
+      },
+      {
+        "name": "harmonyos",
+        "signingConfig": "hos",
+        "compatibleSdkVersion": "6.0.0(20)",
+        "targetSdkVersion": "6.0.0(20)",
         "runtimeOS": "HarmonyOS"
       }
     ],
@@ -26,7 +34,8 @@
         {
           "name": "default",
           "applyToProducts": [
-            "default"
+            "default",
+            "harmonyos"
           ]
         }
       ]
