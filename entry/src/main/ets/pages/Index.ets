@@ -20,20 +20,21 @@ struct Index {
   @State currentId: number = 0;
   private nextTabId: number = 1;
 
-  @Builder tabBuilder(id: number, index: number) {
+  @Builder
+  tabBuilder(id: number, index: number) {
     Row() {
       // TODO: Hook-up title here.
       Text(String(index))
         .padding('10pt')
       Button('X')
-      .backgroundColor('#00000000')
-      .visibility(this.tablist.length>1 && index != 0 ? Visibility.Visible: Visibility.Hidden)
-      .fontColor(Color.Black)
-      .fontWeight(FontWeight.Bolder)
-      .onClick((event) => {
+        .backgroundColor('#00000000')
+        .visibility(this.tablist.length > 1 && index != 0 ? Visibility.Visible : Visibility.Hidden)
+        .fontColor(Color.Black)
+        .fontWeight(FontWeight.Bolder)
+        .onClick((event) => {
           this.currentId = this.tablist[0];
           servoshell.deleteWebview(index, this.tablist);
-          this.tablist.splice(index,1);
+          this.tablist.splice(index, 1);
           // TODO: Instead of defaulting to 0, remember the previously focused Webview.
           servoshell.focusWebview(0, this.tablist)
         })
@@ -41,14 +42,14 @@ struct Index {
     .width(65)
     .height(40)
     .justifyContent(FlexAlign.Center)
-    .backgroundColor(this.currentId === id ? '#1B8381': Color.White)
+    .backgroundColor(this.currentId === id ? '#1B8381' : Color.White)
     .borderRadius(10)
     .shadow({
-          radius: 10,
-          color: Color.Gray,
-          offsetX: 10,
-          offsetY: 10
-        })
+      radius: 10,
+      color: Color.Gray,
+      offsetX: 10,
+      offsetY: 10
+    })
     .onClick(() => {
       this.currentId = id;
       servoshell.focusWebview(index, this.tablist)
@@ -75,7 +76,7 @@ struct Index {
     // We originally use `Column()` here, but for some reason the column
     // extends beyond the edge of the screen. This does not happen with
     // Flex.
-    Flex({ direction: FlexDirection.Column}) {
+    Flex({ direction: FlexDirection.Column }) {
       Row() {
         Button('+')
           .backgroundColor(Color.White)
@@ -130,7 +131,7 @@ struct Index {
       .listDirection(Axis.Horizontal)
       .height(40)
       .width('100%')
-      .padding( {left: 10, right: 10})
+      .padding({ left: 10, right: 10 })
       .backgroundColor('#e1e1e1')
 
       Stack() {
@@ -142,10 +143,10 @@ struct Index {
             .focusable(true)
             .focusOnTouch(true)
         }, (item: number) => String(item))
-        }
-        .flexGrow(1)
-        .width('100%')
-        .backgroundColor('#e1e1e1')
+      }
+      .flexGrow(1)
+      .width('100%')
+      .backgroundColor('#e1e1e1')
     }
     .width('100%')
   }
