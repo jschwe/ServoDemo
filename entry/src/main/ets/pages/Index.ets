@@ -1,17 +1,7 @@
-import promptAction from '@ohos.promptAction';
+import { BusinessError } from '@ohos.base';
 import servoshell from 'libservoshell.so';
 
-function prompt_toast(msg: string) {
-  promptAction.showToast({
-    message: msg,
-    duration: 2000
-  });
-}
-
-// Use the getShared API to obtain the LocalStorage instance shared by stage.
-let storage = LocalStorage.getShared()
-
-@Entry(storage)
+@Entry({ useSharedStorage: true })
 @Component
 struct Index {
   // The state seem to be required to be on the top.
@@ -62,7 +52,18 @@ struct Index {
       console.info('New URL from native: ', new_url)
       this.urlToLoad = new_url
     })
-    servoshell.registerPromptToastCallback(prompt_toast)
+    const promptAction = this.getUIContext().getPromptAction();
+    servoshell.registerPromptToastCallback((msg: string) => {
+      try {
+        promptAction.showToast({
+          message: msg,
+          duration: 2000
+        });
+      } catch (error) {
+        let err = error as BusinessError;
+        console.warn(`showToast failed with error code ${err.code}, message: ${err.message}`);
+      }
+    })
   }
 
   // Called when the user swipes from the right or left edge to the middle
