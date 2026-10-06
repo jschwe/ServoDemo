@@ -14,19 +14,14 @@ let storage = LocalStorage.getShared()
 @Entry(storage)
 @Component
 struct Index {
-  xComponentAttrs: XComponentAttrs = {
-    id: 'ServoDemo',
-    type: XComponentType.SURFACE,
-    libraryname: 'servoshell',
-  }
-
   // The state seem to be required to be on the top.
   @State urlToLoad: string = ""
   @State tablist: Array<number> = [0];
-  @State currentIndex: number = 0;
+  @State currentId: number = 0;
 
-  @Builder tabBuilder(title: string, index: number) {
+  @Builder tabBuilder(id: number, index: number) {
     Row() {
+      // TODO: Hook-up title here.
       Text(String(index))
         .padding('10pt')
       Button('X')
@@ -35,15 +30,17 @@ struct Index {
       .fontColor(Color.Black)
       .fontWeight(FontWeight.Bolder)
       .onClick((event) => {
-          this.currentIndex = 0;
+          this.currentId = this.tablist[0];
           servoshell.deleteWebview(index, this.tablist);
           this.tablist.splice(index,1);
+          // TODO: Instead of defaulting to 0, remember the previously focused Webview.
+          servoshell.focusWebview(0, this.tablist)
         })
     }
     .width(65)
     .height(40)
     .justifyContent(FlexAlign.Center)
-    .backgroundColor(this.currentIndex === index ? '#1B8381': Color.White)
+    .backgroundColor(this.currentId === id ? '#1B8381': Color.White)
     .borderRadius(10)
     .shadow({
           radius: 10,
@@ -51,6 +48,10 @@ struct Index {
           offsetX: 10,
           offsetY: 10
         })
+    .onClick(() => {
+      this.currentId = id;
+      servoshell.focusWebview(index, this.tablist)
+    })
   }
 
   aboutToAppear(): void {
@@ -82,10 +83,12 @@ struct Index {
           .fontSize(22)
           .width('12%')
           .onClick((event) => {
+            // Global counter instead?
             const new_id = this.tablist[this.tablist.length-1]+1;
-            // the order is important as setting the new index will automatically create a new surface.
+            // the order is important as adding a new tab will automatically create a new surface.
             servoshell.nextWindowId(new_id);
-            this.currentIndex = this.tablist.push(new_id) - 1;
+            this.tablist.push(new_id)
+            this.currentId = new_id;
           })
         Button('⇦')
           .backgroundColor(Color.White)
@@ -117,27 +120,33 @@ struct Index {
           })
       }
 
-      Tabs({ barPosition: BarPosition.Start, index: this.currentIndex}) {
+      List({ space: 10 }) {
         ForEach(this.tablist, (item: number, index: number) => {
-          TabContent() {
-            XComponent(this.xComponentAttrs)
-              .focusable(true)
-          }.tabBar(this.tabBuilder(String(item), index))
+          ListItem() {
+            this.tabBuilder(item, index)
+          }
         })
-      }.barHeight(40)
-      .scrollable(false)
-      .onChange((index: number) => {
-        this.currentIndex = index;
-        servoshell.focusWebview(index, this.tablist);
-      })
+      }
+      .listDirection(Axis.Horizontal)
+      .height(40)
+      .width('100%')
+      .padding( {left: 10, right: 10})
       .backgroundColor('#e1e1e1')
+
+      Stack() {
+        ForEach(this.tablist, (item: number) => {
+          XComponent({ id: 'servo-window-' + item, type: XComponentType.SURFACE, libraryname: 'servoshell' })
+            .width('100%')
+            .height('100%')
+            .visibility(this.currentId === item ? Visibility.Visible : Visibility.Hidden)
+            .focusable(true)
+            .focusOnTouch(true)
+        }, (item: number) => String(item))
+        }
+        .flexGrow(1)
+        .width('100%')
+        .backgroundColor('#e1e1e1')
     }
     .width('100%')
   }
-}
-
-interface XComponentAttrs {
-  id: string;
-  type: number;
-  libraryname: string;
 }
