@@ -18,6 +18,7 @@ struct Index {
   @State urlToLoad: string = ""
   @State tablist: Array<number> = [0];
   @State currentId: number = 0;
+  private nextTabId: number = 1;
 
   @Builder tabBuilder(id: number, index: number) {
     Row() {
@@ -83,8 +84,7 @@ struct Index {
           .fontSize(22)
           .width('12%')
           .onClick((event) => {
-            // Global counter instead?
-            const new_id = this.tablist[this.tablist.length-1]+1;
+            const new_id = this.nextTabId++;
             // the order is important as adding a new tab will automatically create a new surface.
             servoshell.nextWindowId(new_id);
             this.tablist.push(new_id)
